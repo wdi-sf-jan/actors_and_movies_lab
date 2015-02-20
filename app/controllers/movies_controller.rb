@@ -4,6 +4,9 @@ class MoviesController < ApplicationController
   end
 
   def create
+    form_data = params.require(:movie).permit(:title, :year)
+    Movie.create form_data
+    redirect_to movies_path
   end
 
   def new
