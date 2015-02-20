@@ -1,2 +1,7 @@
-<h1>Movies#new</h1>
-<p>Find me in app/views/movies/new.html.erb</p>
+<h1>Add a new movie</h1>
+
+<%= form_for @movie do |f| %>
+  <%= f.text_field :title, :placeholder => "Title" %>
+  <%= f.text_field :year, :placeholder => "Year" %>
+  <%= f.submit "Add" %>
+<% end %>
