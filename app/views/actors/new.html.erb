@@ -1,2 +1,6 @@
-<h1>Actors#new</h1>
-<p>Find me in app/views/actors/new.html.erb</p>
+<h1>Add an actor</h1>
+
+<%= form_for @actor do |f| %>
+  <%= f.text_field :name, :placeholder => "Name" %>
+  <%= f.submit %>
+<% end %>
