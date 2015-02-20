@@ -22,6 +22,10 @@ class MoviesController < ApplicationController
   end
 
   def update
+    form_data = params.require(:movie).permit(:title, :year)
+    movie = Movie.find(params[:id])
+    movie.update_attributes form_data
+    redirect_to movie_path(movie)
   end
 
   def destroy
