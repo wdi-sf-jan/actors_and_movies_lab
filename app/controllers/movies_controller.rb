@@ -19,6 +19,7 @@ class MoviesController < ApplicationController
 
   def show
     @movie = Movie.find(params[:id])
+    @actors = Actor.all
   end
 
   def update
@@ -32,5 +33,19 @@ class MoviesController < ApplicationController
     movie = Movie.find(params[:id])
     movie.destroy
     redirect_to movies_path
+  end
+
+  def add_actor
+    movie = Movie.find(params[:id])
+    actor = Actor.find(params[:actor_id])
+    movie.actors << actor
+    redirect_to movie_path(movie)
+  end
+
+  def remove_actor
+    movie = Movie.find(params[:id])
+    actor = Actor.find(params[:actor_id])
+    movie.actors.delete(actor)
+    redirect_to movie_path(movie)
   end
 end
