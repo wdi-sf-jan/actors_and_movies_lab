@@ -10,13 +10,15 @@
     </li>
     <% end %>
   </ul>
-  <%= form_tag add_movie_path do |f|%>
-    <select name="movie_id">
-      <% @movies.each do |flick| %>
-      <option value="<%=flick.id%>"><%=flick.title %></option>
-      <% end %>
-    </select>
-    <input type="submit" value="Add">
+  <% unless @movies.empty? %>
+    <%= form_tag add_movie_path do |f|%>
+      <select name="movie_id">
+        <% @movies.each do |flick| %>
+        <option value="<%=flick.id%>"><%=flick.title %></option>
+        <% end %>
+      </select>
+      <input type="submit" value="Add">
+    <% end %>
   <% end %>
 </div>
 

@@ -12,13 +12,15 @@
     </li>
     <% end %>
   </ul>
-  <%= form_tag add_actor_path(@movie) do %>
-    <select name="actor_id">
-      <% @actors.each do |actor| %>
-      <option value="<%=actor.id%>"><%=actor.name%></option>
-      <% end %>
-    </select>
-    <input type="submit" value="Add">
+  <% unless @actors.empty? %>
+    <%= form_tag add_actor_path(@movie) do %>
+      <select name="actor_id">
+        <% @actors.each do |actor| %>
+        <option value="<%=actor.id%>"><%=actor.name%></option>
+        <% end %>
+      </select>
+      <input type="submit" value="Add">
+    <% end %>
   <% end %>
 </div>
 
