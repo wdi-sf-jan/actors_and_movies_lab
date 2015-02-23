@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post '/actors/:id/movies/new' => 'actors#add_movie', as: :add_movie
   delete '/actors/:id/movies/:movie_id' => 'actors#remove_movie', as: :remove_movie
 
+  root 'site#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
