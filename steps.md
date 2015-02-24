@@ -609,3 +609,51 @@ In `actors_movie.rb`:
 ```ruby
 validates :actor_id, uniqueness: {scope: :movie_id}
 ```
+
+__Use Rails' collection_select form helper__
+
+In the above code for rendering the dropdown menus, I manually wrote
+HTML in my template files.  For instance, in
+
+`views/actors/show.html.erb` I had:
+
+```erb
+<select name="movie_id">
+  <% @movies.each do |flick| %>
+  <option value="<%=flick.id%>"><%=flick.title %></option>
+  <% end %>
+</select>
+```
+
+Well, Rails probably has a helper function for this. Someone in class
+mentioned
+[collection_select](http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html#method-i-collection_select)
+which can be used to do the following refactoring:
+
+```erb
+<%= collection_select :movie, :id, @movies, :id, :title %>
+```
+
+This roughly generates the following:
+
+```erb
+<select name="movie[id]">
+  <% @movies.each do |flick| %>
+  <option value="<%=flick.id%>"><%=flick.title %></option>
+  <% end %>
+</select>
+```
+
+Neat. However, as you can see, it isn't a direct
+translation. `name="movie_id"` has turned into
+`name="movie[id]"`. That's ok, but I have to modify the controller
+accordingly. The `add_movie` action in  `actors_controller.rb` needs
+to grab the movie id slightly differently:
+
+```ruby
+def add_movie
+  movie_params = params.require(:movie).permit(:id)
+  movie = Movie.find(movie_params[:id])
+  # ...code snipped...
+end
+```
