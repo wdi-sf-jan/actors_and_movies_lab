@@ -500,7 +500,7 @@ end
 and also add the `add_actor` and `remove_actor` methods that my forms
 will call.
 
-```
+```ruby
 def add_actor
   movie = Movie.find(params[:id])
   actor = Actor.find(params[:actor_id])
