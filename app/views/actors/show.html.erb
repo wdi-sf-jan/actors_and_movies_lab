@@ -12,12 +12,8 @@
   </ul>
   <% unless @movies.empty? %>
     <%= form_tag add_movie_path do |f|%>
-      <select name="movie_id">
-        <% @movies.each do |flick| %>
-        <option value="<%=flick.id%>"><%=flick.title %></option>
-        <% end %>
-      </select>
-      <input type="submit" value="Add">
+      <%= collection_select :movie, :id, @movies, :id, :title %>
+      <%= submit_tag "Add" %>
     <% end %>
   <% end %>
 </div>

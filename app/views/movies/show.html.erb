@@ -14,12 +14,8 @@
   </ul>
   <% unless @actors.empty? %>
     <%= form_tag add_actor_path(@movie) do %>
-      <select name="actor_id">
-        <% @actors.each do |actor| %>
-        <option value="<%=actor.id%>"><%=actor.name%></option>
-        <% end %>
-      </select>
-      <input type="submit" value="Add">
+      <%= collection_select :actor, :id, @actors, :id, :name %>
+      <%= submit_tag "Add" %>
     <% end %>
   <% end %>
 </div>

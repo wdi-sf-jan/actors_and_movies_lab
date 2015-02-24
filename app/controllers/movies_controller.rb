@@ -36,8 +36,9 @@ class MoviesController < ApplicationController
   end
 
   def add_actor
+    actor_params = params.require(:actor).permit(:id)
     movie = Movie.find(params[:id])
-    actor = Actor.find(params[:actor_id])
+    actor = Actor.find(actor_params[:id])
     unless movie.actors.include? actor
       movie.actors << actor
     end
