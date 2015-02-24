@@ -50,7 +50,7 @@ class MoviesController < ApplicationController
   end
 
   def actor_params
-    params.require(:actor).permit(:id)
+    params.require(:actor).permit(:id, :name)
   end
 
   def find_movie
