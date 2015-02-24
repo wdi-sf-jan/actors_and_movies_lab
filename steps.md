@@ -369,4 +369,243 @@ because Actors won't belong to (i.e., be nested in) Movies nor will
 Movies be nested in Authors. I could probably make it work with nested
 resources but it doesn't feel quite right.
 
-To be continued...
+__Routes__
+
+It seems like I'm going to need 4 routes:
+
+- add a movie to an actor
+- remove a movie from an actor
+- add an actor to a movie, and
+- remove an actor from a movie.
+
+Hey, you say, aren't these really 2 actions (associating an actor and
+a movie and dissocating them)? Yeah, that's a good point, but I feel
+like I want my user interface to be different between the two, so I'm
+sticking with 4 for now. Maybe I'll learn more in the future and have
+to change my approach. That's ok.
+
+I add the following to my `config/routes.rb` and we'll see how it goes.
+
+```ruby
+post '/movies/:id/actors/new' => 'movies#add_actor', as: :add_actor
+delete 'movies/:id/actors/:actor_id' => 'movies#remove_actor', as: :remove_actor
+post '/actors/:id/movies/new' => 'actors#add_movie', as: :add_movie
+delete '/actors/:id/movies/:movie_id' => 'actors#remove_movie', as: :remove_movie
+```
+
+__The Model__
+
+Ok, I know that for a many-to-many relationship I'm going to need a
+junction table. Rails offers a couple ways to represent this, but my
+favorite, the "has :many, :through", requires me to create a new
+model. I need to construct this new model carefully. Just like the
+other models it needs to be named something singular, and the table
+name will be the pluralized version. The junction table will need to
+have two columns (in addition to the primary key) that are foreign
+keys to the two tables I'm joining. I write this as:
+
+```sh
+rails g model ActorsMovie actor:references movie:references
+```
+
+(Note: the model is the singular "ActorsMovie" while the table will be
+the plural "ActorsMovies". Also note that the pluralization only
+happens at the end of the word, so the "Actors" piece always has the
+"s", even in the singular version).
+
+I check out the two files that are generated, they look reasonable. In
+order to finish setting up this relationship, I'll need to modify
+`actor.rb` and `movie.rb` to be:
+
+```ruby
+class Actor < ActiveRecord::Base
+  has_many :actors_movies
+  has_many :movies, through: :actors_movies
+end
+```
+
+```ruby
+class Movie < ActiveRecord::Base
+  has_many :actors_movies
+  has_many :actors, through: :actors_movies
+end
+```
+
+The way I think of that code is that we can't directly say that an
+actor has many movies because the `actors` table and the `movies`
+table have no direct links between them. Instead, the `actors` table
+is connected to the `actors_movies` table (which is also connected to
+the `movies` table), so we have to establish that relationship
+first. Then once we've established that first hop we can make the
+second hop by saying an actor has many movies `:through`
+`actors_movies`.
+
+Also, since you've generated a new migration file, don't forget to run
+
+```sh
+rake db:migrate
+```
+
+I test out the relationships work in `rails console`. It would not be
+wise to skip this step.
+
+__The Views__
+
+I decide that I want the relationships to appear in the existing view
+pages. Meaning, I'd like movies to show up on an actor's show page and
+I'd like actors to show up on a movie's show page. So, I won't create
+any new template files, but I will need to modify the existing ones.
+
+In the `view/actors/show.html.erb` I add the following,
+
+```erb
+<div>
+  <h2>Movies</h2>
+  <ul>
+    <% @actor.movies.each do |role| %>
+    <li>
+      <%= link_to "#{role.title} (#{role.year})", movie_path(role) %>
+      <%= button_to "X", remove_movie_path(@actor, role), :method => :delete %>
+    </li>
+    <% end %>
+  </ul>
+  <%= form_tag add_movie_path do |f|%>
+    <select name="movie_id">
+      <% @movies.each do |flick| %>
+      <option value="<%=flick.id%>"><%=flick.title %></option>
+      <% end %>
+    </select>
+    <input type="submit" value="Add">
+  <% end %>
+</div>
+```
+
+This renders:
+
+- an h2 heading that says "Movies"
+- a list of actors in the movie and a button to remove them
+- a dropdown menu of all actors so you can add a new one to the movie
+
+In order for this to work I need to modify `movies_controller.rb` so
+that the `show` method returns all the actors in addition to the movie
+in question
+
+```ruby
+def show
+  @movie = Movie.find(params[:id])
+  @actors = Actor.all
+end
+```
+
+and also add the `add_actor` and `remove_actor` methods that my forms
+will call.
+
+```
+def add_actor
+  movie = Movie.find(params[:id])
+  actor = Actor.find(params[:actor_id])
+  movie.actors << actor
+  redirect_to movie_path(movie)
+end
+def remove_actor
+  movie = Movie.find(params[:id])
+  actor = Actor.find(params[:actor_id])
+  movie.actors.delete(actor)
+  redirect_to movie_path(movie)
+end
+```
+
+I repeat these steps on the actor show page and in
+`actors_controller.rb`.
+
+The app is mostly done by this point.
+
+Bonus Steps
+-----------
+
+__Seed file__
+
+Did you create a `db/seeds.rb` file? Not necessary, but it can be
+helpful.
+
+__A home page to connect the actors and movies sections__
+
+Even after I've done everything above, going to
+[localhost:3000](localhost:3000) still shows the Rails Welcome page.
+I create a home page that allows me to browse with by actor or by
+movie.
+
+In `config/routes.rb`, add
+
+```ruby
+root 'site#index'
+```
+
+Also, create a site controller by
+
+```sh
+rails generate controller site index
+```
+
+And modify `views/site/index.html.erb` to contain your home page.
+
+__Delete dependent rows__
+
+What happens if you delete a movie that has actors assigned to it?
+That relationship is represented in the `actors_movies` table. If you
+remove the movie, the `actors_movies` table will now be referencing a
+movie that no longer exists. This is bad. A better solution is remove
+all rows from the `actors_movies` table that reference the movie or
+actor being deleted. Rails can help you does this with `dependent:
+:destroy`.
+
+In both models, `actor.rb` and `movie.rb`, change the line
+
+```ruby
+has_many :actors_movies
+```
+
+to
+
+```ruby
+has_many :actors_movies, dependent: :destroy
+```
+
+__Only be able to add movies / actors that aren't already associated__
+
+We might as well only populate the drop downs with values that haven't
+already been associated with the item in question. Ruby has this
+awesome feature where you can subtract one array from another to get
+the difference of them.
+
+I changed the #show actions in `actors_controller.rb` and
+`movies_controller.rb` to be the following, respectively:
+
+```ruby
+def show
+  @actor = Actor.find(params[:id])
+  @movies = Movie.all - @actor.movies
+end
+```
+
+```ruby
+def show
+  @movie = Movie.find(params[:id])
+  @actors = Actor.all - @movie.actors
+end
+```
+
+__Prevent Movie and Actor from being associated more than once__
+
+While preventing duplicate associations by filtering what appears in
+the drop down menus works for the most part, is there a way to prevent
+this duplication at the database level?
+
+Yep, try a uniqueness validation on the join model with the addition
+of `:scope`:
+
+In `actors_movie.rb`:
+
+```ruby
+validates :actor_id, uniqueness: {scope: :movie_id}
+```
