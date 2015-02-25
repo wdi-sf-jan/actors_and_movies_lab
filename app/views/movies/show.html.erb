@@ -22,10 +22,7 @@
 
 <%= render 'comments/all' %>
 
-<%= form_for [@movie, Comment.new] do |f| %>
-  <div><%= f.text_area :content, :rows => 5 %></div>
-  <%= f.submit %>
-<% end %>
+<%= render 'comments/form' %>
 
 <%= link_to "Edit", edit_movie_path(@movie) %>
 <%= button_to "Delete", movie_path(@movie), :method => :delete %>

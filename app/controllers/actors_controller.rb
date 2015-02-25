@@ -19,6 +19,7 @@ class ActorsController < ApplicationController
   end
 
   def show
+    @commentable = @actor
     @movies = Movie.all - @actor.movies
     @comments = @actor.comments
   end

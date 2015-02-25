@@ -20,10 +20,7 @@
 
 <%= render 'comments/all' %>
 
-<%= form_for [@actor, Comment.new] do |f| %>
-  <div><%= f.text_area :content, :rows => 5 %></div>
-  <%= f.submit %>
-<% end %>
+<%= render 'comments/form' %>
 
 <%= link_to "Edit", edit_actor_path(@actor) %>
 <%= button_to "Delete", actor_path(@actor), :method => :delete %>
