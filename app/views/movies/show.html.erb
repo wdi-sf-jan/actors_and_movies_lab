@@ -20,6 +20,19 @@
   <% end %>
 </div>
 
+<h3>Comments</h3>
+
+<% @comments.each do |comment| %>
+  <p>
+  <%= comment.content %> - <%= time_ago_in_words comment.created_at %> ago
+  </p>
+<% end %>
+
+<%= form_for [@movie, Comment.new] do |f| %>
+  <div><%= f.text_area :content, :rows => 5 %></div>
+  <%= f.submit %>
+<% end %>
+
 <%= link_to "Edit", edit_movie_path(@movie) %>
 <%= button_to "Delete", movie_path(@movie), :method => :delete %>
 <br><br>

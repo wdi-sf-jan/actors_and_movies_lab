@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :movies
+  resources :movies do
+    post '/comments' => 'comments#create', as: 'comments'
+  end
   resources :actors do
     post '/comments' => 'comments#create', as: 'comments'
   end
