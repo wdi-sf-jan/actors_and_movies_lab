@@ -1,5 +1,4 @@
 class AccessController < ApplicationController
-  before_action :confirm_logged_in, only: [:home]
   before_action :prevent_login_signup, only: [:signup, :login]
 
   def signup
@@ -58,12 +57,6 @@ class AccessController < ApplicationController
   private
   def user_params
     params.require(:user).permit(:username, :password, :password_digest)
-  end
-
-  def confirm_logged_in
-    unless session[:user_id]
-      redirect_to login_path, alert: "Please log in"
-    end
   end
 
   def prevent_login_signup
