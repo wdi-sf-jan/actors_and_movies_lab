@@ -20,6 +20,7 @@ class ActorsController < ApplicationController
 
   def show
     @movies = Movie.all - @actor.movies
+    @comments = @actor.comments
   end
 
   def update
