@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   def create
-    find_commentable.comments.build(comment_params).save
+    find_commentable.comments.build(comment_params.merge user_id: session[:user_id]).save
     redirect_to :back
   end
 
