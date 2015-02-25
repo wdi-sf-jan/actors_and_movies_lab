@@ -8,6 +8,8 @@ Come up with a plan based on what you read in the pre-reading.
 
 Work with a partner.
 
+Please feel free to add simple_form if you wish to make life easier.
+
 ## Bonus
 
 Implement comments by users. You’ll need to implement authentication.
