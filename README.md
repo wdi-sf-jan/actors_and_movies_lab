@@ -14,7 +14,10 @@ Implement comments by users. You’ll need to implement authentication.
 
 ## Super Bonus
 
-Implement threaded comments. 
+Implement a polymorphic association between an `Image` entity and `Movie`/`Actor`. Basically, think about how IMDB does images for both movies and for actors.
 
-* Hint 1: This is also a polymorphic relationship.
-* Hint 2: One way to accomplish this is to use [self-joins](http://guides.rubyonrails.org/association_basics.html#self-joins).
+### For photo uploads:
+
+You may use [uploadcare](uploadcare.com), which will mean figuring out how their widget works.
+
+Alternatively, you may use a gem like [paperclip](https://github.com/thoughtbot/paperclip).
