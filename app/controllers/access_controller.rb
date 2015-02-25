@@ -1,20 +1,21 @@
 class AccessController < ApplicationController
+  skip_before_action :confirm_logged_in, only: [:signup, :login, :create, :attempt_login]
   before_action :prevent_login_signup, only: [:signup, :login]
 
   def signup
     @user = User.new
   end
 
-   def create
+  def create
     @user = User.create(user_params)
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = "You are now logged in!"
-      redirect_to home_path
+      redirect_to root_path
     else
       render :signup
     end
-   end
+  end
 
   def login
   end
@@ -38,7 +39,7 @@ class AccessController < ApplicationController
 
     else
       session[:user_id] = authorized_user.id
-      redirect_to home_path, flash: {success: "You are now logged in."}
+      redirect_to root_path, flash: {success: "You are now logged in."}
     end
 
   end
