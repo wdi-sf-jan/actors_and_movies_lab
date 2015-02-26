@@ -1,19 +1,19 @@
-<h1><%= @movie.title %></h1>
+<h1><%= @entity.title %></h1>
 
-<p><%= @movie.year %></p>
+<p><%= @entity.year %></p>
 
 <div class="black-box">
   <h2>Actors</h2>
   <ul>
-    <% @movie.actors.each do |actor| %>
+    <% @entity.actors.each do |actor| %>
     <li>
       <%= link_to actor.name, actor %>
-      <%= button_to "X", remove_actor_path(@movie, actor), :method => :delete %>
+      <%= button_to "X", remove_actor_path(@entity, actor), :method => :delete %>
     </li>
     <% end %>
   </ul>
   <% unless @actors.empty? %>
-    <%= form_tag add_actor_path(@movie) do %>
+    <%= form_tag add_actor_path(@entity) do %>
       <%= collection_select :actor, :id, @actors, :id, :name %>
       <%= submit_tag "Add" %>
     <% end %>
@@ -24,8 +24,8 @@
 
 <%= render 'comments/form' %>
 
-<%= link_to "Edit", edit_movie_path(@movie) %>
-<%= button_to "Delete", movie_path(@movie), :method => :delete %>
+<%= link_to "Edit", edit_movie_path(@entity) %>
+<%= button_to "Delete", movie_path(@entity), :method => :delete %>
 <br><br>
 
 <%= link_to "Back to movies", movies_path %>

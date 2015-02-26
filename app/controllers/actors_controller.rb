@@ -1,5 +1,5 @@
 class ActorsController < ApplicationController
-  before_action :find_actor, only: [:edit, :show, :update, :destroy, :add_movie, :remove_movie]
+  before_action :find_entity, only: [:edit, :show, :update, :destroy, :add_movie, :remove_movie]
 
   def index
     @actors = Actor.all
@@ -11,45 +11,39 @@ class ActorsController < ApplicationController
   end
 
   def new
-    @actor = Actor.new
+    @entity = Actor.new
   end
 
   def edit
   end
 
   def show
-    @commentable = @actor
-    @movies = Movie.all - @actor.movies
-    @comments = @actor.comments
+    @commentable = @entity
+    @movies = Movie.all - @entity.movies
+    @comments = @entity.comments
   end
 
   def update
-    @actor.update_attributes actor_params
-    redirect_to @actor
+    @entity.update_attributes actor_params
+    redirect_to @entity
   end
 
   def destroy
-    @actor.destroy
+    @entity.destroy
     redirect_to actors_path
   end
 
   def add_movie
-    @actor = Actor.find(params[:id])
     movie = Movie.find(movie_params[:id])
-    unless @actor.movies.include? movie
-      @actor.movies << movie
+    unless @entity.movies.include? movie
+      @entity.movies << movie
     end
-    redirect_to @actor
+    redirect_to @entity
   end
 
   def remove_movie
     movie = Movie.find(params[:movie_id])
-    @actor.movies.delete(movie)
-    redirect_to @actor
+    @entity.movies.delete(movie)
+    redirect_to @entity
   end
-
-  private
-    def find_actor
-      @actor = Actor.find(params[:id])
-    end
 end

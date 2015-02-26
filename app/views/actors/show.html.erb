@@ -1,12 +1,12 @@
-<h1><%= @actor.name %></h1>
+<h1><%= @entity.name %></h1>
 
 <div class="black-box">
   <h2>Movies</h2>
   <ul>
-    <% @actor.movies.each do |role| %>
+    <% @entity.movies.each do |role| %>
     <li>
       <%= link_to "#{role.title} (#{role.year})", movie_path(role) %>
-      <%= button_to "X", remove_movie_path(@actor, role), :method => :delete %>
+      <%= button_to "X", remove_movie_path(@entity, role), :method => :delete %>
     </li>
     <% end %>
   </ul>
@@ -22,8 +22,8 @@
 
 <%= render 'comments/form' %>
 
-<%= link_to "Edit", edit_actor_path(@actor) %>
-<%= button_to "Delete", actor_path(@actor), :method => :delete %>
+<%= link_to "Edit", edit_actor_path(@entity) %>
+<%= button_to "Delete", actor_path(@entity), :method => :delete %>
 <br><br>
 
 <%= link_to "Back to actors", actors_path %>

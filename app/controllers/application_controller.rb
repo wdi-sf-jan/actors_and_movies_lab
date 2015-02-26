@@ -12,6 +12,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+    def find_entity
+      params.each do |name, value|
+        if name == 'controller'
+          @entity = value.classify.constantize.find(params[:id]) || nil
+        end
+      end
+    end
+
     def movie_params
       params.require(:movie).permit(:id, :title, :year)
     end
