@@ -1,5 +1,7 @@
 <h1><%= @actor.name %></h1>
-
+ <% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+  <% end %>
 <div class="black-box">
   <h2>Movies</h2>
   <ul>
@@ -17,6 +19,17 @@
     <% end %>
   <% end %>
 </div>
+<div>
+    <h3>Comments</h3>
+    <% @actor.comments.each do |comment| %>
+      <p><%= comment.content %></p>
+    <% end %>
+</div>
+
+<%= form_for [@actor, Comment.new] do |f| %>
+  <%= f.text_area :content %>
+  <%= f.submit %>
+<% end %>
 
 <%= link_to "Edit", edit_actor_path(@actor) %>
 <%= button_to "Delete", actor_path(@actor), :method => :delete %>

@@ -1,4 +1,4 @@
-class MoviesController < ApplicationController
+  class MoviesController < ApplicationController
   before_action :find_movie, only: [:edit, :show, :destroy, :add_actor, :remove_actor]
   
   def index
@@ -19,6 +19,7 @@ class MoviesController < ApplicationController
 
   def show
     @actors = Actor.all - @movie.actors
+    @comments = @movie.comments
   end
 
   def update

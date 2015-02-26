@@ -19,6 +19,17 @@
     <% end %>
   <% end %>
 </div>
+<div>
+    <h3>Comments</h3>
+    <%@movie.comments.each do |comment| %>
+      <p><%= comment.content %></p>
+    <% end %>
+</div>
+
+<%= form_for [@movie, Comment.new] do |f| %>
+  <%= f.text_area :content, rows: 8 %>
+  <%= f.submit "Submit" %>
+<% end %>
 
 <%= link_to "Edit", edit_movie_path(@movie) %>
 <%= button_to "Delete", movie_path(@movie), :method => :delete %>
