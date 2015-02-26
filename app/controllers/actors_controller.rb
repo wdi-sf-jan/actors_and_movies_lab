@@ -6,7 +6,6 @@ class ActorsController < ApplicationController
   end
 
   def create
-    binding.pry
     Actor.create actor_params
     redirect_to actors_path
   end
@@ -50,15 +49,7 @@ class ActorsController < ApplicationController
   end
 
   private
-  def movie_params
-    params.require(:movie).permit(:id, :title, :year)
-  end
-
-  def actor_params
-    params.require(:actor).permit(:id, :name)
-  end
-
-  def find_actor
-    @actor = Actor.find(params[:id])
-  end
+    def find_actor
+      @actor = Actor.find(params[:id])
+    end
 end

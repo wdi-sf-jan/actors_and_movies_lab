@@ -10,4 +10,14 @@ class ApplicationController < ActionController::Base
       redirect_to login_path, alert: "Please log in"
     end
   end
+
+  private
+    def movie_params
+      params.require(:movie).permit(:id, :title, :year)
+    end
+
+    def actor_params
+      params.require(:actor).permit(:id, :name)
+    end
+
 end

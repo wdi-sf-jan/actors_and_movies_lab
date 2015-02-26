@@ -47,15 +47,7 @@ class MoviesController < ApplicationController
   end
 
   private
-  def movie_params
-    params.require(:movie).permit(:title, :year)
-  end
-
-  def actor_params
-    params.require(:actor).permit(:id, :name)
-  end
-
-  def find_movie
-    @movie = Movie.find(params[:id])
-  end
+    def find_movie
+      @movie = Movie.find(params[:id])
+    end
 end
